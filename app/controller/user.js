@@ -7,7 +7,19 @@ class UserController extends Controller {
       email: {type: 'string'},
       password: {type: 'string'},
     });
-    ctx.body = 'post user';
+
+    const userBody = ctx.request.body;
+    if(await this.service.user.findEmail(userBody.email)) {
+      ctx.throw(422, "邮箱已经存在");
+    }
+    const user = await this.service.user.createUser(userBody);
+
+    ctx.body = user;
+  }
+
+  async login() {
+    const userBody = this.ctx.request.body;
+    this.ctx.validate({})
   }
 }
 
