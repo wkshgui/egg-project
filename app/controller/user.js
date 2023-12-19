@@ -1,5 +1,3 @@
-const user = require('../model/user');
-
 const Controller = require('egg').Controller;
 class UserController extends Controller {
   async create() {
@@ -63,6 +61,35 @@ class UserController extends Controller {
     userInfo.isSubscribe = isSubscribe;
 
     this.ctx.body = userInfo;
+  }
+
+  // 关注频道
+  async subscribe() {
+    const subscribeid = this.ctx.params.subscribeid;
+    const userid = this.ctx.user._id;
+    if(subscribeid === userid) {
+      this.ctx.throw(403, "不能关注自己");
+    }
+
+    const { Subscribe, User } = this.app.model;
+    const subInfo = await Subscribe.findOne({
+      user: userid,
+      channel: subscribeid
+    });
+    if(subInfo) {
+      this.ctx.throw(401, "已经关注");
+    }
+    const sub = new Subscribe({user: userid, channel: subscribeid});
+    const subDb = await sub.save();
+    if(subDb){
+      const subscribeUser = await User.findById(subscribeid);
+      subscribeUser.subscribeCount++;
+      await subscribeUser.save();
+
+      this.ctx.body = subscribeUser;
+    } else {
+      this.ctx.throw(401, '关注失败');
+    }
   }
 }
 

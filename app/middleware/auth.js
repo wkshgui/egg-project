@@ -6,8 +6,7 @@ module.exports = (options = { required: true}) => {
         if(token) {
             try {
                 const data = ctx.service.user.verifyToken(token);
-                ctx.user = data;
-                await next();
+                ctx.user = data.user;
             } catch (error) {
                 ctx.throw(401, 'token验证失败');
             }
@@ -16,6 +15,7 @@ module.exports = (options = { required: true}) => {
         } else {
             ctx.throw(401, 'token未传入');
         }
-        // await next();
+        
+        await next();
     }
 }
