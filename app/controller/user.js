@@ -1,3 +1,5 @@
+const user = require('../model/user');
+
 const Controller = require('egg').Controller;
 class UserController extends Controller {
   async create() {
@@ -42,7 +44,25 @@ class UserController extends Controller {
   }
 
   async userInfo() {
-    this.ctx.body = this.ctx.user;
+    const registerUserid = this.ctx.user ? this.ctx.user._id : null;
+    const userid = this.ctx.params.userid;
+    const { Subscribe, User } = this.app.model;
+    let isSubscribe = false;
+    if(registerUserid) {
+      const subscribe = await Subscribe.findOne({
+        user: registerUserid,
+        channel: userid
+      });
+      if(subscribe) {
+        isSubscribe = true;
+      }
+    }
+
+    const userInfoDb = await User.findById(userid);
+    const userInfo = userInfoDb._doc;
+    userInfo.isSubscribe = isSubscribe;
+
+    this.ctx.body = userInfo;
   }
 }
 

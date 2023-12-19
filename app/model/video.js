@@ -1,38 +1,39 @@
+// app/config/video.js
 module.exports = app => {
     const mongoose = app.mongoose
     const Schema = mongoose.Schema
   
-    const userSchema = new Schema({
-      username: {
+    const videoSchema = new Schema({
+      title: {
         type: String,
         required: true
       },
-      email: {
+      descrption: {
+        type: String,
+        required: false
+      },
+      vodvideoId: {
         type: String,
         required: true
       },
-      password: {
-        type: String,
+      user: {
+        type: mongoose.ObjectId,
         required: true,
-        select: false
-      },
-      phone: {
-        type: String,
-        required: true
-      },
-      image: {
-        type: String,
-        default: null
+        ref: 'User'
       },
       cover: {
         type: String,
-        default: null
+        required: false
       },
-      channeldes: {
-        type: String,
-        default: null
+      commentCount: {
+        type: Number,
+        default: 0
       },
-      subscribeCount: {
+      likeCount: {
+        type: Number,
+        default: 0
+      },
+      dislikeCount: {
         type: Number,
         default: 0
       },
@@ -46,5 +47,5 @@ module.exports = app => {
       }
     })
   
-    return mongoose.model('User', userSchema)
+    return mongoose.model('Video', videoSchema)
   }

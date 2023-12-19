@@ -8,5 +8,5 @@ module.exports = app => {
 
   router.post('/users', controller.user.create);
   router.post('/users/login', controller.user.login);
-  router.post('/users/info', app.middleware.auth({required: false}), controller.user.userInfo);
+  router.post('/users/info/:userid', app.middleware.auth({required: false}), controller.user.userInfo);
 };
