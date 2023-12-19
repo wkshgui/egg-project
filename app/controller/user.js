@@ -40,6 +40,10 @@ class UserController extends Controller {
       token
     }
   }
+
+  async userInfo() {
+    this.ctx.body = this.ctx.user;
+  }
 }
 
 module.exports = UserController;
